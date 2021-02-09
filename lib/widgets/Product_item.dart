@@ -6,8 +6,8 @@ import 'package:shop_app/screens/Product_Details_Screen.dart';
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final product = Provider.of<Product>(context);
-
+    final product = Provider.of<Product>(context,listen: false);
+    print("bukiddddddddddddddddddd");
     return InkWell(
       onTap: () => Navigator.of(context)
           .pushNamed(ProductDetailsScreen.routeName, arguments: product.id),
@@ -24,12 +24,16 @@ class ProductItem extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               backgroundColor: Colors.black87,
-              leading: IconButton(
-                  icon: Icon( product.isFavorite ? Icons.favorite:Icons.favorite_border),
-                  onPressed: () {
-                    product.toggleFavoriteStatus();
-                  },
-                  color: Theme.of(context).accentColor),
+              leading: Consumer<Product>(
+                builder: (ctx, product, _) => IconButton(
+                    icon: Icon(product.isFavorite
+                        ? Icons.favorite
+                        : Icons.favorite_border),
+                    onPressed: () {
+                      product.toggleFavoriteStatus();
+                    },
+                    color: Theme.of(context).accentColor),
+              ),
               trailing: IconButton(
                 icon: Icon(Icons.shopping_cart),
                 onPressed: () {},
