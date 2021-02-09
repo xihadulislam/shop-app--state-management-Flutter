@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'file:///E:/xihad/z-demo/shop_app/lib/providers/Product.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/CartProvider.dart';
 import 'package:shop_app/widgets/ProductGrid.dart';
-import 'package:shop_app/widgets/Product_item.dart';
+import 'package:shop_app/widgets/badge.dart';
 
-enum FilterOption{
-  ONLY_FAVORITE,
-  ALL
-}
+import 'cart_screen.dart';
+
+enum FilterOption { ONLY_FAVORITE, ALL }
 
 class ProductsOverViewScreen extends StatefulWidget {
   @override
@@ -14,7 +14,6 @@ class ProductsOverViewScreen extends StatefulWidget {
 }
 
 class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
-
   var _showOnlyFavorite = false;
 
   @override
@@ -23,31 +22,43 @@ class _ProductsOverViewScreenState extends State<ProductsOverViewScreen> {
         appBar: AppBar(
           title: Text("My Shop"),
           actions: [
-
+            Consumer<CartProvider>(
+              builder: (ctx, cart, ch) =>
+                  Badge(child: ch, value: cart.itemCount.toString()),
+              child: IconButton(
+                icon: Icon(Icons.shopping_cart),
+                onPressed: (){
+                  Navigator.of(context).pushNamed(CartScreen.routeName);
+                },
+              ),
+            ),
             PopupMenuButton(
-                onSelected: (FilterOption selectValue){
-
+                onSelected: (FilterOption selectValue) {
                   setState(() {
-                    if(selectValue == FilterOption.ALL){
+                    if (selectValue == FilterOption.ALL) {
                       _showOnlyFavorite = false;
-                    }else{
+                    } else {
                       _showOnlyFavorite = true;
                     }
                   });
                 },
-                icon:  Icon(Icons.more_vert)
-                ,itemBuilder: (_)=>[
-              PopupMenuItem(child: Text("All",),value: FilterOption.ALL,),
-              PopupMenuItem(child: Text("Only Favorites",),value: FilterOption.ONLY_FAVORITE,),
-
-            ])
-
+                icon: Icon(Icons.more_vert),
+                itemBuilder: (_) => [
+                      PopupMenuItem(
+                        child: Text(
+                          "All",
+                        ),
+                        value: FilterOption.ALL,
+                      ),
+                      PopupMenuItem(
+                        child: Text(
+                          "Only Favorites",
+                        ),
+                        value: FilterOption.ONLY_FAVORITE,
+                      ),
+                    ])
           ],
         ),
-        body: ProductGrid(_showOnlyFavorite)
-
-    );
+        body: ProductGrid(_showOnlyFavorite));
   }
 }
-
-
